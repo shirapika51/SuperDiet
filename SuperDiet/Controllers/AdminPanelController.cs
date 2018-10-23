@@ -138,7 +138,7 @@ namespace SuperDiet.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(UsersView));
             }
             return View(user);
         }
@@ -174,7 +174,7 @@ namespace SuperDiet.Controllers
             var user = await _context.User.FindAsync(id);
             _context.User.Remove(user);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(UsersView));
         }
 
         // GET: AdminPanel/Create
@@ -195,7 +195,7 @@ namespace SuperDiet.Controllers
             {
                 _context.Add(order);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(OrdersView));
             }
             ViewData["UserID"] = new SelectList(_context.Set<User>(), "ID", "ID", order.UserID);
             return View(order);
@@ -218,7 +218,7 @@ namespace SuperDiet.Controllers
             {
                 _context.Add(item);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ItemsView));
             }
             return View(item);
         }
@@ -269,7 +269,7 @@ namespace SuperDiet.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ItemsView));
             }
             return View(item);
         }
@@ -300,7 +300,7 @@ namespace SuperDiet.Controllers
             var item = await _context.Item.FindAsync(id);
             _context.Item.Remove(item);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ItemsView));
         }
 
         private bool ItemExists(int id)
