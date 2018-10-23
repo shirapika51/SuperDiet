@@ -1,0 +1,48 @@
+﻿@model IEnumerable<SuperDiet.Models.Order>
+
+@{
+    ViewData["Title"] = "OrdersView";
+}
+
+<h2>הזמנות</h2>
+
+<p>
+    <a asp-action="CreateOrder">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Total)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.ID)
+                </td>
+                <td>
+                    <a asp-action="DetailsOrder" asp-route-id="@item.ID">Details</a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index">חזור לעמוד הקודם</a>
