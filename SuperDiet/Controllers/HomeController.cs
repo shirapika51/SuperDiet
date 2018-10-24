@@ -10,8 +10,16 @@ namespace SuperDiet.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private SuperDietContext db;
+
+        public HomeController(SuperDietContext _db)
         {
+            db = _db;
+        }
+
+        public IActionResult Index(string massage)
+        {
+            ViewBag.Massage = massage;
             return View();
         }
 
@@ -19,6 +27,30 @@ namespace SuperDiet.Controllers
         {
             ViewData["Message"] = "Your application description page.";
 
+            return View();
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(string username, string password)
+        {
+            var loguser = db.User.Where(u=> u.UserName==username && u.Password == password).FirstOrDefault();
+            if (loguser != null) {
+                if (loguser.IsAdmin)
+                    return RedirectToAction("Index", "AdminPanel");
+                else
+                    return View(); //להוסיף userpanel
+            }
+            ViewBag.Message = "Username or Password incorrect";
             return View();
         }
 

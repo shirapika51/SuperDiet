@@ -113,7 +113,7 @@ namespace SuperDiet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditUser(int id, [Bind("ID,UserName,Password,FirstName,LastName")] User user)
+        public async Task<IActionResult> EditUser(int id, [Bind("ID,UserName,Password,IsAdmin,FirstName,LastName")] User user)
         {
             if (id != user.ID)
             {
