@@ -1,17 +1,60 @@
 ﻿@{
     ViewData["Title"] = "Contact";
 }
-<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
+<div class="welcome-section">
+    <h1>Super Diet</h1>
+    <h4>ברוכים הבאים לסופר דיאט - הסופר שיעזור לכם בדיאטה</h4>
+    <p>
+        אנחנו מאמינים באורח חיים בריא. בסופר דיאט יודעים שהמפתח להצלחה טמון בעצמנו ובכוח הרצון שלנו.<br />
+        אנחנו כאן כדי לעזור לכל מי שרוצה ללמוד לקיים אורח חיים בריא יותר ולרדת במשקל.
+    </p>
+    <p>
+        בסופר שלנו, תוכלו למצוא את מגוון המוצרים הבריאים בכל קטגוריה ולהרכיב לכם רשימת קניות מתאימה ובמחירים המשתלמים ביותר.
+    </p>
+</div>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
+<div class="branch-section">
+    <h2>הסניפים שלנו</h2>
+    <p>
+        סניף חולון - יצחק רבין 22 חולון<br />
+        סניף כרמי יוסף - רקפת 33 כרמי יוסף
+    </p>
+</div>
 
-<address>
-    <strong>Support:</strong> <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+<div id="map_canvas"></div>
+
+<div class="contact-section">
+    <h3>צרו איתנו קשר</h3>
+    מייל: superdiet@gmail.com<br />
+    טלפון: 03-5555555
+</div>
+
+<script>
+    function displayMap() {
+        document.getElementById('map_canvas').style.display = "block";
+        initialize();
+    }
+    function initialize() {
+        // create the map
+        var myOptions = {
+            zoom: 12,
+            center: new google.maps.LatLng(31.968360, 34.788274),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        var position1 = new google.maps.Marker({
+            position: new google.maps.LatLng(31.968895, 34.772840),
+            title: "סניף המכללה למנהל"
+        });
+        position1.setMap(map);
+
+        var position2 = new google.maps.Marker({
+            position: new google.maps.LatLng(31.962513, 34.807691),
+            title: "סניף אחר שלנו"
+        });
+        position2.setMap(map);
+    }
+    window.onload = displayMap;
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHfrMCGKVV-wfWMLlkT8nwewHedtQQEhE&callback=initMap"
+        async defer></script>
