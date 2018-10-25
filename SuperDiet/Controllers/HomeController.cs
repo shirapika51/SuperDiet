@@ -23,13 +23,6 @@ namespace SuperDiet.Controllers
             return View();
         }
 
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
         public IActionResult Login()
         {
             return View();
@@ -38,6 +31,22 @@ namespace SuperDiet.Controllers
         public IActionResult Register()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register([Bind("ID,UserName,Password,IsAdmin,FirstName,LastName")] User user)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Add(user);
+                await db.SaveChangesAsync();
+                if (user.IsAdmin)
+                    return RedirectToAction("Index", "AdminPanel");
+                else
+                    return View(); //להוסיף userpanel
+            }
+            return View(user);
         }
 
         [HttpPost]
@@ -56,8 +65,6 @@ namespace SuperDiet.Controllers
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 

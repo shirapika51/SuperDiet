@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20181025081614_addkeyinusername.cs" />
+    <Compile Remove="Migrations\20181025081614_addkeyinusername.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4">
       <PrivateAssets>all</PrivateAssets>
