@@ -1,0 +1,16 @@
+﻿@model SuperDiet.Models.User
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h2>Register</h2>
+<form asp-action="Register">
+    שם משתמש:<input asp-for="UserName" type="text" name="username" /><br />
+    סיסמא:<input asp-for="Password" type="text" name="password" /><br />
+    <label><input asp-for="IsAdmin" /> @Html.DisplayNameFor(model => model.IsAdmin)</label><br />
+    שם פרטי:<input asp-for="FirstName" type="text" name="firstname" /><br />
+    שם משפחה:<input asp-for="LastName" type="text" name="lastname" /><br />
+    <button type="submit">הירשם</button><br />
+</form>
+<a asp-area="" asp-action="Register">הרשמה</a>
+<span style="color:red">@ViewBag.Message</span>
