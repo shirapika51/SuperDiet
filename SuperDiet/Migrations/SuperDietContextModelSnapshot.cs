@@ -19,6 +19,21 @@ namespace SuperDiet.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("SuperDiet.Models.Branch", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address");
+
+                    b.Property<string>("City");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Branch");
+                });
+
             modelBuilder.Entity("SuperDiet.Models.Item", b =>
                 {
                     b.Property<int>("ID")
@@ -27,11 +42,7 @@ namespace SuperDiet.Migrations
 
                     b.Property<int>("Calories");
 
-                    b.Property<int>("CategoryID");
-
                     b.Property<string>("Name");
-
-                    b.Property<int?>("OrderID");
 
                     b.Property<int>("Price");
 
@@ -39,9 +50,22 @@ namespace SuperDiet.Migrations
 
                     b.HasKey("ID");
 
+                    b.ToTable("Item");
+                });
+
+            modelBuilder.Entity("SuperDiet.Models.ItemOrder", b =>
+                {
+                    b.Property<int>("ItemID");
+
+                    b.Property<int>("OrderID");
+
+                    b.Property<int>("Quantity");
+
+                    b.HasKey("ItemID", "OrderID");
+
                     b.HasIndex("OrderID");
 
-                    b.ToTable("Item");
+                    b.ToTable("ItemOrder");
                 });
 
             modelBuilder.Entity("SuperDiet.Models.Order", b =>
@@ -52,13 +76,7 @@ namespace SuperDiet.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<int>("Total");
-
-                    b.Property<int>("UserID");
-
                     b.HasKey("ID");
-
-                    b.HasIndex("UserID");
 
                     b.ToTable("Order");
                 });
@@ -84,18 +102,16 @@ namespace SuperDiet.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("SuperDiet.Models.Item", b =>
+            modelBuilder.Entity("SuperDiet.Models.ItemOrder", b =>
                 {
-                    b.HasOne("SuperDiet.Models.Order")
-                        .WithMany("Items")
-                        .HasForeignKey("OrderID");
-                });
+                    b.HasOne("SuperDiet.Models.Item", "Item")
+                        .WithMany("ItemOrders")
+                        .HasForeignKey("ItemID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity("SuperDiet.Models.Order", b =>
-                {
-                    b.HasOne("SuperDiet.Models.User", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserID")
+                    b.HasOne("SuperDiet.Models.Order", "Order")
+                        .WithMany("ItemOrders")
+                        .HasForeignKey("OrderID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

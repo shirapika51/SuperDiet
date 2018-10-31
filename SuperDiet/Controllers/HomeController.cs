@@ -39,12 +39,14 @@ namespace SuperDiet.Controllers
         {
             if (ModelState.IsValid)
             {
+                Order userOrder = new Order { ID = user.ID, Date = DateTime.Now };
                 db.Add(user);
+                db.Add(userOrder);
                 await db.SaveChangesAsync();
                 if (user.IsAdmin)
                     return RedirectToAction("Index", "AdminPanel");
                 else
-                    return View(); //להוסיף userpanel
+                    return RedirectToAction("Index", "Items");
             }
             return View(user);
         }
@@ -57,7 +59,7 @@ namespace SuperDiet.Controllers
                 if (loguser.IsAdmin)
                     return RedirectToAction("Index", "AdminPanel");
                 else
-                    return View(); //להוסיף userpanel
+                    return RedirectToAction("Index", "Items", new { id = loguser.ID });
             }
             ViewBag.Message = "Username or Password incorrect";
             return View();

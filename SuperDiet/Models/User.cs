@@ -21,6 +21,5 @@ namespace SuperDiet.Models
                 return FirstName + " " + LastName;
             }
         }
-        public virtual ICollection<Order> Orders { get; set; }
     }
 }

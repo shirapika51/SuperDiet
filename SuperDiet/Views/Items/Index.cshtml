@@ -6,15 +6,12 @@
 
 <h2>Index</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@*<a asp-controller="Carts" asp-action="Index" asp-route-id="@ViewBag.UserID">הצג סל קניות</a>*@
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CategoryID)
-            </th>
+            <th></th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -30,30 +27,53 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CategoryID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Calories)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+    <tbody></tbody>
 </table>
+@section scripts
+{
+    <script>
+        function fillTable(url) {
+            $.ajax({
+                url: url,
+                success: function (data) {
+                    var table = $("#table tbody");
+                    table.empty();
+                    $.each(data, function (i, item) {
+                        table.append("<tr>" +
+                            "<td>" + "<img class='rounded-circle img-fluid d-block mx-auto' src='/images/" + item.name + ".jpg' width='85' height='85'>" + "</td>" +
+                            "<td>" + "<a href='/Items/Details/" + item.id + "'>" + item.name + "</a>" + "</td>" +
+                            "<td>" + item.price + " ₪</td>" +
+                            "<td>" + item.quantity + "</td>" +
+                            "<td>" +
+                            "<a href='#' class='add-to-cart' data-item-id=" + item.id + " data-user-id=" + @ViewBag.userID + ">הוסף לסל</a>" +
+                            "</td>" +
+                            "</tr>");
+                    });
+                }
+            });
+        };
+
+        $(document).ready(function () {
+            fillTable("/Items");
+        });
+
+        $("#table").on("click", ".add-to-cart", function () {
+            var button = $(this);
+
+            $.ajax({
+                url: "/Items/AddToCart/" + button.attr("data-item-id") + button.attr("data-user-id"),
+                method: "POST",
+                success: function () {
+                    alert("הוסף לסל בהצלחה!");
+                    var quantity = button.parents("tr").children(".quantity").html();
+                    button.parents("tr").children(".quantity").html(quantity - 1);
+                },
+                statusCode: {
+                    404: function () {
+                        alert("המוצר חסר במלאי");
+                    }
+                }
+            });
+        });
+    </script>
+}
