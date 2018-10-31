@@ -16,25 +16,22 @@ namespace SuperDiet.Models
 
         public SuperDietContext() :base() { }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<ItemOrder>()
+                .HasKey(po => new { po.ItemID, po.OrderID });
+        }
+
         public DbSet<SuperDiet.Models.Item> Item { get; set; }
 
         public DbSet<SuperDiet.Models.Order> Order { get; set; }
 
+        public DbSet<SuperDiet.Models.ItemOrder> ItemOrder { get; set; }
+
         public DbSet<SuperDiet.Models.User> User { get; set; }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Item>().ToTable("Items");
-        //    modelBuilder.Entity<Order>().ToTable("Orders");
-        //    modelBuilder.Entity<User>().ToTable("Users");
-        //}
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    string cn = @"Server=.\SQLEXPRESS;Database=test-db;User Id= . . .";
-        //    optionsBuilder.UseSqlServer(cn);
-
-        //    base.OnConfiguring(optionsBuilder);
-        //}
+        public DbSet<SuperDiet.Models.Branch> Branch { get; set; }
     }
 }

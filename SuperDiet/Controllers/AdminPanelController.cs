@@ -39,6 +39,117 @@ namespace SuperDiet.Controllers
             return View(await _context.User.ToListAsync());
         }
 
+        public async Task<IActionResult> BranchesView()
+        {
+            return View(await _context.Branch.ToListAsync());
+        }
+
+        // GET: AdminPanel/Create
+        public IActionResult CreateBranch()
+        {
+            return View();
+        }
+
+        // POST: AdminPanel/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateBranch([Bind("ID,City,Address")] Branch item)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(item);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(BranchesView));
+            }
+            return View(item);
+        }
+
+        public async Task<IActionResult> EditBranch(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var item = await _context.Branch.FindAsync(id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return View(item);
+        }
+
+        // POST: AdminPanel/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditBranch(int id, [Bind("ID,City,Address")] Branch branch)
+        {
+            if (id != branch.ID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(branch);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!BranchExists(branch.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(BranchesView));
+            }
+            return View(branch);
+        }
+
+        // GET: AdminPanel/Delete/5
+        public async Task<IActionResult> DeleteBranch(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var item = await _context.Branch
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return View(item);
+        }
+
+        // POST: AdminPanel/Delete/5
+        [HttpPost, ActionName("DeleteBranch")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteBranch(int id)
+        {
+            var item = await _context.Branch.FindAsync(id);
+            _context.Branch.Remove(item);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(BranchesView));
+        }
+
+        private bool BranchExists(int id)
+        {
+            return _context.Branch.Any(e => e.ID == id);
+        }
+
         public async Task<IActionResult> DetailsOrder(int? id)
         {
             if (id == null)
@@ -175,30 +286,6 @@ namespace SuperDiet.Controllers
             _context.User.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(UsersView));
-        }
-
-        // GET: AdminPanel/Create
-        public IActionResult CreateOrder()
-        {
-            ViewData["UserID"] = new SelectList(_context.Set<User>(), "ID", "ID");
-            return View();
-        }
-
-        // POST: AdminPanel/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateOrder([Bind("ID,UserID,Date,Total")] Order order)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(order);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(OrdersView));
-            }
-            ViewData["UserID"] = new SelectList(_context.Set<User>(), "ID", "ID", order.UserID);
-            return View(order);
         }
 
         // GET: AdminPanel/Create

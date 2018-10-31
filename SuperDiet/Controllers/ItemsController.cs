@@ -19,8 +19,9 @@ namespace SuperDiet.Controllers
         }
 
         // GET: Items
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
+            ViewBag.userID = id;
             return View(await _context.Item.ToListAsync());
         }
 
@@ -31,122 +32,54 @@ namespace SuperDiet.Controllers
             {
                 return NotFound();
             }
-
             var item = await _context.Item
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (item == null)
             {
                 return NotFound();
             }
-
             return View(item);
         }
 
-        // GET: Items/Create
-        public IActionResult Create()
+        // POST: Items/AddToCart
+        [HttpPost("AddToCart/{ItemId}")]
+        public async Task<IActionResult> AddToCart([FromRoute] int ItemId, int UserID)
         {
-            return View();
-        }
-
-        // POST: Items/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,CategoryID,Name,Price,Quantity,Calories")] Item item)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(item);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(item);
-        }
-
-        // GET: Items/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
+            var item = await _context.Item.SingleOrDefaultAsync(m => m.ID == ItemId);
+            if (item == null || item.Quantity == 0)
             {
                 return NotFound();
             }
-
-            var item = await _context.Item.FindAsync(id);
-            if (item == null)
+            var itemOrder = await _context.ItemOrder.SingleOrDefaultAsync(m => m.OrderID == UserID && m.ItemID == ItemId);
+            if (itemOrder == null)
             {
-                return NotFound();
-            }
-            return View(item);
-        }
-
-        // POST: Items/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,CategoryID,Name,Price,Quantity,Calories")] Item item)
-        {
-            if (id != item.ID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                itemOrder = new ItemOrder
                 {
-                    _context.Update(item);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ItemExists(item.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                    OrderID = UserID,
+                    ItemID = item.ID,
+                    Quantity = 1
+                };
+                _context.ItemOrder.Add(itemOrder);
             }
-            return View(item);
-        }
-
-        // GET: Items/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
+            else
             {
-                return NotFound();
+                itemOrder.Quantity += 1;
             }
-
-            var item = await _context.Item
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (item == null)
-            {
-                return NotFound();
-            }
-
-            return View(item);
-        }
-
-        // POST: Items/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var item = await _context.Item.FindAsync(id);
-            _context.Item.Remove(item);
+            item.Quantity--;
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Ok();
         }
 
-        private bool ItemExists(int id)
+        // GET: Items
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProduct([FromRoute] int id)
         {
-            return _context.Item.Any(e => e.ID == id);
+            var item = await _context.Item.SingleOrDefaultAsync(m => m.ID == id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
         }
     }
 }

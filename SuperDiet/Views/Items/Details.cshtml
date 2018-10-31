@@ -10,11 +10,9 @@
     <h4>Item</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CategoryID)
-        </dt>
+        <dt></dt>
         <dd>
-            @Html.DisplayFor(model => model.CategoryID)
+            <img class='rounded-circle img-fluid d-block mx-auto' src='/images/+ @Html.DisplayFor(model => model.Name)+.jpg' width='85' height='85'>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Name)
@@ -43,6 +41,5 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
