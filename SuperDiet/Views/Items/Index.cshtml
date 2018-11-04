@@ -8,7 +8,7 @@
 
 @*<a asp-controller="Carts" asp-action="Index" asp-route-id="@ViewBag.UserID">הצג סל קניות</a>*@
 
-<table class="table">
+<table class="table" id="table">
     <thead>
         <tr>
             <th></th>
@@ -54,14 +54,14 @@
         };
 
         $(document).ready(function () {
-            fillTable("/Items");
+            fillTable("/Api/Items");
         });
 
         $("#table").on("click", ".add-to-cart", function () {
             var button = $(this);
 
             $.ajax({
-                url: "/Items/AddToCart/" + button.attr("data-item-id") + button.attr("data-user-id"),
+                url: "Api/Items/AddToCart/" + button.attr("data-item-id") + "/" + button.attr("data-user-id"),
                 method: "POST",
                 success: function () {
                     alert("הוסף לסל בהצלחה!");
