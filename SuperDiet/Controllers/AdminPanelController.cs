@@ -335,7 +335,7 @@ namespace SuperDiet.Controllers
         {
             if (id != item.ID)
             {
-                return NotFound();
+                return RedirectToAction(nameof(ErrorView));
             }
 
             if (ModelState.IsValid)
@@ -349,7 +349,7 @@ namespace SuperDiet.Controllers
                 {
                     if (!ItemExists(item.ID))
                     {
-                        return NotFound();
+                        return RedirectToAction("ErrorView", new { error = "item not found" });
                     }
                     else
                     {
@@ -380,7 +380,7 @@ namespace SuperDiet.Controllers
         }
 
         // POST: AdminPanel/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteItem")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmedItem(int id)
         {
@@ -393,6 +393,12 @@ namespace SuperDiet.Controllers
         private bool ItemExists(int id)
         {
             return _context.Item.Any(e => e.ID == id);
+        }
+
+        public IActionResult ErrorView(string error)
+        {
+            ViewBag.Massage = error;
+            return View(error);
         }
     }
 }

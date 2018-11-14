@@ -39,14 +39,15 @@ namespace SuperDiet.Controllers
         {
             if (ModelState.IsValid)
             {
-                Order userOrder = new Order { ID = user.ID, Date = DateTime.Now };
-                db.Add(user);
-                db.Add(userOrder);
+                db.User.Add(user);
+                await db.SaveChangesAsync();
+                var userOrder = new Order { ID = user.ID, Date = DateTime.Now };
+                db.Order.Add(userOrder);
                 await db.SaveChangesAsync();
                 if (user.IsAdmin)
                     return RedirectToAction("Index", "AdminPanel");
                 else
-                    return RedirectToAction("Index", "Items");
+                    return RedirectToAction("Index", "Items", new { id = user.ID });
             }
             return View(user);
         }

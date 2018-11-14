@@ -40,5 +40,20 @@ namespace SuperDiet.Controllers
             }
             return View(item);
         }
+
+        public async Task<IActionResult> Cart(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var order = await _context.Order.FirstOrDefaultAsync(m => m.ID == id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            ViewBag.userID = id;
+            return View(order);
+        }
     }
 }

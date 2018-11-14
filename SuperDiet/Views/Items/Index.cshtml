@@ -6,7 +6,7 @@
 
 <h2>Index</h2>
 
-@*<a asp-controller="Carts" asp-action="Index" asp-route-id="@ViewBag.UserID">הצג סל קניות</a>*@
+<a class="glyphicon glyphicon-shopping-cart" asp-action="Cart" asp-route-id="@ViewBag.userID"></a>
 
 <table class="table" id="table">
     <thead>
@@ -43,9 +43,9 @@
                             "<td>" + "<img class='rounded-circle img-fluid d-block mx-auto' src='/images/" + item.name + ".jpg' width='85' height='85'>" + "</td>" +
                             "<td>" + "<a href='/Items/Details/" + item.id + "'>" + item.name + "</a>" + "</td>" +
                             "<td>" + item.price + " ₪</td>" +
-                            "<td>" + item.quantity + "</td>" +
+                            "<td class='quantity'>" + item.quantity + "</td>" +
                             "<td>" +
-                            "<a href='#' class='add-to-cart' data-item-id=" + item.id + " data-user-id=" + @ViewBag.userID + ">הוסף לסל</a>" +
+                            "<a href='#' class='add-to-cart' data-item-id='" + item.id + "' data-user-id='" + @ViewBag.userID + "'>הוסף לסל</a>" +
                             "</td>" +
                             "</tr>");
                     });
@@ -59,14 +59,13 @@
 
         $("#table").on("click", ".add-to-cart", function () {
             var button = $(this);
-
             $.ajax({
-                url: "Api/Items/AddToCart/" + button.attr("data-item-id") + "/" + button.attr("data-user-id"),
+                url: "../../Api/Items/AddToCart/" + button.attr("data-item-id") + "/" + button.attr("data-user-id"),
                 method: "POST",
                 success: function () {
-                    alert("הוסף לסל בהצלחה!");
                     var quantity = button.parents("tr").children(".quantity").html();
                     button.parents("tr").children(".quantity").html(quantity - 1);
+                    alert("הוסף לסל בהצלחה!");
                 },
                 statusCode: {
                     404: function () {
