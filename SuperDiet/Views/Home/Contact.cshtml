@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<SuperDiet.Models.Branch>
+@{
     ViewData["Title"] = "Contact";
 }
 <div class="welcome-section">
@@ -16,45 +17,69 @@
 <div class="branch-section">
     <h2>הסניפים שלנו</h2>
     <p>
-        סניף חולון - יצחק רבין 22 חולון<br />
-        סניף כרמי יוסף - רקפת 33 כרמי יוסף
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.City)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Address)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.City)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </p>
 </div>
 
-<div id="map_canvas"></div>
+<div id="MyMap"></div>
 
 <div class="contact-section">
     <h3>צרו איתנו קשר</h3>
     מייל: superdiet@gmail.com<br />
     טלפון: 03-5555555
 </div>
-
-<script>
-    function displayMap() {
-        document.getElementById('map_canvas').style.display = "block";
-        initialize();
-    }
-    function initialize() {
-        // create the map
-        var myOptions = {
-            zoom: 12,
-            center: new google.maps.LatLng(31.968360, 34.788274),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
+@section scripts
+    {
+    <script>
+        function displayMap() {
+            document.getElementById('MyMap').style.display = "block";
+            initialize();
         }
-        map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-        var position1 = new google.maps.Marker({
-            position: new google.maps.LatLng(31.968895, 34.772840),
-            title: "סניף המכללה למנהל"
-        });
-        position1.setMap(map);
-
-        var position2 = new google.maps.Marker({
-            position: new google.maps.LatLng(31.962513, 34.807691),
-            title: "סניף אחר שלנו"
-        });
-        position2.setMap(map);
-    }
-    window.onload = displayMap;
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHfrMCGKVV-wfWMLlkT8nwewHedtQQEhE&callback=initMap"
-        async defer></script>
+        function initialize() {
+            var myOptions = {
+                zoom: 12,
+                center: new google.maps.LatLng(31.968360, 34.788274),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+            map = new google.maps.Map(document.getElementById("MyMap"), myOptions);
+            $.ajax({
+                url: "/Home/getAllBranches",
+                success: function (result) {
+                    for (var i = 0; i < result.branches; i++) {
+                        var position = new google.maps.Marker({
+                            position: new google.maps.LatLng(result.branches[i].latitude, result.branches[i].longtitude),
+                            title: result.branches[i].address + result.branches[i].city
+                        });
+                        position.setMap(map);
+                    }
+                }
+            });
+        }
+        window.onload = displayMap;
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHfrMCGKVV-wfWMLlkT8nwewHedtQQEhE&callback=displayMap" async defer></script>
+}

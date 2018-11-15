@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperDiet.Models;
 
 namespace SuperDiet.Migrations
 {
     [DbContext(typeof(SuperDietContext))]
-    partial class SuperDietContextModelSnapshot : ModelSnapshot
+    [Migration("20181115084448_longtitudelatitude")]
+    partial class longtitudelatitude
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

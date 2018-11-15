@@ -1,28 +1,25 @@
-﻿@model IEnumerable<SuperDiet.Models.Item>
-
+﻿@model SuperDiet.Models.Order
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Cart";
 }
 
-<h2>Index</h2>
-
-<a class="glyphicon glyphicon-shopping-cart" asp-action="Cart" asp-route-id="@ViewBag.userID"></a>
+<h2>Cart</h2>
 
 <table class="table" id="table">
     <thead>
         <tr>
             <th></th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                Price
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Quantity)
+                Quantity
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Calories)
+                Total
             </th>
             <th></th>
         </tr>
@@ -30,47 +27,49 @@
     <tbody></tbody>
 </table>
 @section scripts
-{
+    {
     <script>
-        function fillTable(url) {
+        $(document).ready(fillTable());
+
+        function fillTable() {
             $.ajax({
-                url: url,
+                url: "../../Api/ItemOrders/GetItemOrder/" + @ViewBag.userID,
+                @*data: "userID = @ViewBag.userID",*@
                 success: function (data) {
+                    var sum = 0;
+                    var total = 0;
                     var table = $("#table tbody");
                     table.empty();
                     $.each(data, function (i, item) {
+                        total = item.price * item.quantity;
                         table.append("<tr>" +
                             "<td>" + "<img class='rounded-circle img-fluid d-block mx-auto' src='/images/" + item.name + ".jpg' width='85' height='85'>" + "</td>" +
                             "<td>" + "<a href='/Items/Details/" + item.id + "'>" + item.name + "</a>" + "</td>" +
                             "<td>" + item.price + " ₪</td>" +
                             "<td class='quantity'>" + item.quantity + "</td>" +
+                            "<td>" + total + "</td>" +
                             "<td>" +
-                            "<a href='#' class='add-to-cart' data-item-id='" + item.id + "' data-user-id='" + @ViewBag.userID + "'>הוסף לסל</a>" +
+                            "<a href='#' class='rmv-from-cart' data-item-id='" + item.id + "' data-user-id='" + @ViewBag.userID + "'>הסר מהסל</a>" +
                             "</td>" +
                             "</tr>");
+                        sum += item.price * item.quantity;
                     });
+                    table.append("<br><td> Total:" + sum + " ₪</td>")
                 }
             });
         };
 
-        $(document).ready(function () {
-            fillTable("/Api/Items");
-        });
 
-        $("#table").on("click", ".add-to-cart", function () {
+        $("#table").on("click", ".rmv-from-cart", function () {
             var button = $(this);
             $.ajax({
-                url: "../../Api/Items/AddToCart/" + button.attr("data-item-id") + "/" + button.attr("data-user-id"),
+                url: "../../Api/ItemOrders/RemoveFromCart/" + button.attr("data-item-id") + "/" + button.attr("data-user-id"),
                 method: "POST",
                 success: function () {
-                    var quantity = button.parents("tr").children(".quantity").html();
-                    button.parents("tr").children(".quantity").html(quantity - 1);
-                    alert("הוסף לסל בהצלחה!");
-                },
-                statusCode: {
-                    404: function () {
-                        alert("המוצר חסר במלאי");
-                    }
+                    alert("הוסר מהסל בהצלחה!");
+                    var table = $("#table tbody");
+                    table.empty();
+                    fillTable();
                 }
             });
         });

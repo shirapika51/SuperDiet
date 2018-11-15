@@ -55,7 +55,7 @@ namespace SuperDiet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateBranch([Bind("ID,City,Address")] Branch item)
+        public async Task<IActionResult> CreateBranch([Bind("ID,City,Address,Latitude,Longtitude")] Branch item)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace SuperDiet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditBranch(int id, [Bind("ID,City,Address")] Branch branch)
+        public async Task<IActionResult> EditBranch(int id, [Bind("ID,City,Address,Latitude,Longtitude")] Branch branch)
         {
             if (id != branch.ID)
             {
@@ -335,7 +335,7 @@ namespace SuperDiet.Controllers
         {
             if (id != item.ID)
             {
-                return NotFound();
+                return RedirectToAction(nameof(ErrorView));
             }
 
             if (ModelState.IsValid)
@@ -349,7 +349,7 @@ namespace SuperDiet.Controllers
                 {
                     if (!ItemExists(item.ID))
                     {
-                        return NotFound();
+                        return RedirectToAction("ErrorView", new { error = "item not found" });
                     }
                     else
                     {
@@ -380,7 +380,7 @@ namespace SuperDiet.Controllers
         }
 
         // POST: AdminPanel/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteItem")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmedItem(int id)
         {
@@ -393,6 +393,12 @@ namespace SuperDiet.Controllers
         private bool ItemExists(int id)
         {
             return _context.Item.Any(e => e.ID == id);
+        }
+
+        public IActionResult ErrorView(string error)
+        {
+            ViewBag.Massage = error;
+            return View(error);
         }
     }
 }

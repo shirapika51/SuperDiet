@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SuperDiet.Models;
 
 namespace SuperDiet.Controllers
@@ -39,14 +40,15 @@ namespace SuperDiet.Controllers
         {
             if (ModelState.IsValid)
             {
-                Order userOrder = new Order { ID = user.ID, Date = DateTime.Now };
-                db.Add(user);
-                db.Add(userOrder);
+                db.User.Add(user);
+                await db.SaveChangesAsync();
+                var userOrder = new Order { ID = user.ID, Date = DateTime.Now };
+                db.Order.Add(userOrder);
                 await db.SaveChangesAsync();
                 if (user.IsAdmin)
                     return RedirectToAction("Index", "AdminPanel");
                 else
-                    return RedirectToAction("Index", "Items");
+                    return RedirectToAction("Index", "Items", new { id = user.ID });
             }
             return View(user);
         }
@@ -65,9 +67,16 @@ namespace SuperDiet.Controllers
             return View();
         }
 
-        public IActionResult Contact()
+        public async Task<IActionResult> Contact()
         {
-            return View();
+            return View(await db.Branch.ToListAsync());
+        }
+
+        [HttpGet("Home/getAllBranches")]
+        public async Task<IActionResult> GetAllBranches()
+        {
+            var branch = await db.Branch.ToListAsync();
+            return Ok(new { branches = branch });
         }
 
         public IActionResult Privacy()
