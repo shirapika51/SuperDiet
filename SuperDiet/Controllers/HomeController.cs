@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SuperDiet.Models;
 
 namespace SuperDiet.Controllers
@@ -66,9 +67,16 @@ namespace SuperDiet.Controllers
             return View();
         }
 
-        public IActionResult Contact()
+        public async Task<IActionResult> Contact()
         {
-            return View();
+            return View(await db.Branch.ToListAsync());
+        }
+
+        [HttpGet("Home/getAllBranches")]
+        public async Task<IActionResult> GetAllBranches()
+        {
+            var branch = await db.Branch.ToListAsync();
+            return Ok(new { branches = branch });
         }
 
         public IActionResult Privacy()

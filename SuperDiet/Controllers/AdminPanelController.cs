@@ -55,7 +55,7 @@ namespace SuperDiet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateBranch([Bind("ID,City,Address")] Branch item)
+        public async Task<IActionResult> CreateBranch([Bind("ID,City,Address,Latitude,Longtitude")] Branch item)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace SuperDiet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditBranch(int id, [Bind("ID,City,Address")] Branch branch)
+        public async Task<IActionResult> EditBranch(int id, [Bind("ID,City,Address,Latitude,Longtitude")] Branch branch)
         {
             if (id != branch.ID)
             {

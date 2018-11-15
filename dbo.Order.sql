@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[Order] (
+    [ID]   INT NOT NULL,
+    [Date] DATETIME2 (7) NOT NULL,
+    CONSTRAINT [PK_Order] PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+

@@ -25,23 +25,23 @@ body {
     width: 100%;
 }
 
-    .carousel-inner img {
-        width: 100%;
-        height: auto !important;
-        vertical-align: middle;
-    }
+.carousel-inner img {
+    width: 100%;
+    height: auto !important;
+    vertical-align: middle;
+}
 
 /* Sale Section */
 .sale-section {
     text-align: center;
 }
 
-    .sale-section img {
-        width: 200px;
-        height: 200px;
-        margin-left: auto;
-        margin-right: auto;
-    }
+.sale-section img {
+    width: 200px;
+    height: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
     /*Weather Section*/
 .weatherwidget-io {
@@ -80,7 +80,7 @@ body {
 
 /*Map Section*/
 
-#map_canvas {
+#MyMap {
     width: 600px;
     height: 400px;
     margin: auto;

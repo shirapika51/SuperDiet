@@ -1,0 +1,77 @@
+﻿@model SuperDiet.Models.Order
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<h2>Cart</h2>
+
+<table class="table" id="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                Name
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Total
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+@section scripts
+    {
+    <script>
+        $(document).ready(fillTable());
+
+        function fillTable() {
+            $.ajax({
+                url: "../../Api/ItemOrders/GetItemOrder/" + @ViewBag.userID,
+                @*data: "userID = @ViewBag.userID",*@
+                success: function (data) {
+                    var sum = 0;
+                    var total = 0;
+                    var table = $("#table tbody");
+                    table.empty();
+                    $.each(data, function (i, item) {
+                        total = item.price * item.quantity;
+                        table.append("<tr>" +
+                            "<td>" + "<img class='rounded-circle img-fluid d-block mx-auto' src='/images/" + item.name + ".jpg' width='85' height='85'>" + "</td>" +
+                            "<td>" + "<a href='/Items/Details/" + item.id + "'>" + item.name + "</a>" + "</td>" +
+                            "<td>" + item.price + " ₪</td>" +
+                            "<td class='quantity'>" + item.quantity + "</td>" +
+                            "<td>" + total + "</td>" +
+                            "<td>" +
+                            "<a href='#' class='rmv-from-cart' data-item-id='" + item.id + "' data-user-id='" + @ViewBag.userID + "'>הסר מהסל</a>" +
+                            "</td>" +
+                            "</tr>");
+                        sum += item.price * item.quantity;
+                    });
+                    table.append("<br><td> Total:" + sum + " ₪</td>")
+                }
+            });
+        };
+
+
+        $("#table").on("click", ".rmv-from-cart", function () {
+            var button = $(this);
+            $.ajax({
+                url: "../../Api/ItemOrders/RemoveFromCart/" + button.attr("data-item-id") + "/" + button.attr("data-user-id"),
+                method: "POST",
+                success: function () {
+                    alert("הוסר מהסל בהצלחה!");
+                    var table = $("#table tbody");
+                    table.empty();
+                    fillTable();
+                }
+            });
+        });
+    </script>
+}
