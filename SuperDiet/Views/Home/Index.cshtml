@@ -28,9 +28,9 @@
         <span class="sr-only">Next</span>
     </a>
 </div>
-<div class="row sale-section">
+<section class="row sale-section">
     <div class="row" id="tables_page_headlines">
-        <canvas id="myCanvas" width="200" height="100"></canvas>
+        <canvas id="myCanvas" width="200" height="100" dir="ltr"></canvas>
         <script>
             var c = document.getElementById("myCanvas");
             var ctx = c.getContext("2d");
@@ -54,7 +54,10 @@
         <img src="~/images/prihiot.jpg" class="img-responsive" />
         <h5>5 ש"ח</h5>
     </div>
-</div>
+</section>
+<video width="550" height="400" controls>
+    <source src="~/images/DietMenu.mp4" type="video/mp4">
+</video>
 
 <a class="weatherwidget-io" href="https://forecast7.com/en/31d9734d79/rishon-letsiyon/" data-label_1="RISHON LETSIYON" data-label_2="WEATHER" data-font="Open Sans" data-icons="Climacons Animated" data-mode="Current" data-days="3" data-theme="clear">RISHON LETSIYON WEATHER</a>
 <script>
