@@ -56,8 +56,9 @@ namespace SuperDiet.Controllers
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
-            var loguser = db.User.Where(u=> u.UserName==username && u.Password == password).FirstOrDefault();
-            if (loguser != null) {
+            var loguser = db.User.Where(u => u.UserName == username && u.Password == password).FirstOrDefault();
+            if (loguser != null)
+            {
                 if (loguser.IsAdmin)
                     return RedirectToAction("Index", "AdminPanel");
                 else
@@ -67,16 +68,21 @@ namespace SuperDiet.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Contact()
+        public IActionResult Contact()
         {
-            return View(await db.Branch.ToListAsync());
+            var branch = db.Branch.GroupBy(s => s.City).SelectMany(c => c).ToList();
+
+            //var branch = from snifim in db.Branch
+            //             group snifim by snifim.City into g
+            //             select g;
+            return View(branch);
         }
 
         [HttpGet("Home/getAllBranches")]
         public async Task<IActionResult> GetAllBranches()
         {
             var branch = await db.Branch.ToListAsync();
-            return Ok(new { branches = branch });
+            return Ok(branch);
         }
 
         public IActionResult Privacy()

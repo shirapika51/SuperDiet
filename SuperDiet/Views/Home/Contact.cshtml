@@ -50,7 +50,9 @@
 <div class="contact-section">
     <h3>צרו איתנו קשר</h3>
     מייל: superdiet@gmail.com<br />
-    טלפון: 03-5555555
+    טלפון: 03-5555555<br />
+    <a href="https://www.facebook.com/SuperDiet1"><i class="fa fa-facebook-f" style="font-size:40px"></i></a>
+    <div class="fb-share-button" data-href="https://www.facebook.com/SuperDiet1" data-layout="button" data-size="large" data-mobile-iframe="false"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.facebook.com%2FSuperDiet1&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
 </div>
 @section scripts
     {
@@ -69,10 +71,10 @@
             $.ajax({
                 url: "/Home/getAllBranches",
                 success: function (result) {
-                    for (var i = 0; i < result.branches; i++) {
+                    for (var i = 0; i < result.length; i++) {
                         var position = new google.maps.Marker({
-                            position: new google.maps.LatLng(result.branches[i].latitude, result.branches[i].longtitude),
-                            title: result.branches[i].address + result.branches[i].city
+                            position: new google.maps.LatLng(result[i].latitude, result[i].longtitude),
+                            title: result[i].address + " " + result[i].city
                         });
                         position.setMap(map);
                     }
